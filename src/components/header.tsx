@@ -6,15 +6,17 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import type { Token, WalletState } from "@/lib/types";
+import type { Token } from "@/lib/types";
 import type { SetStateAction } from "react";
+import btcLogo from "@/assets/btc.png";
+import ethLogo from "@/assets/eth.png";
 
 export default function Header({
 	token,
-	setState,
+	setToken,
 }: {
 	token: Token;
-	setState: Dispatch<SetStateAction<WalletState>>;
+	setToken: Dispatch<SetStateAction<Token>>;
 }) {
 	return (
 		<div className="flex justify-between items-center">
@@ -24,16 +26,20 @@ export default function Header({
 			</p>
 			<Select
 				value={token}
-				onValueChange={(newToken: Token) =>
-					setState((prevState) => ({ ...prevState, token: newToken }))
-				}
+				onValueChange={(newToken: Token) => setToken(newToken)}
 			>
-				<SelectTrigger className="w-[140px]">
+				<SelectTrigger className="w-[120px]">
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>
-					<SelectItem value="bitcoin">Bitcoin</SelectItem>
-					<SelectItem value="ethereum">Ethereum</SelectItem>
+					<SelectItem value="bitcoin">
+						<img src={btcLogo} className="w-6 h-6" alt={"BTC"} />
+						BTC
+					</SelectItem>
+					<SelectItem value="ethereum">
+						<img src={ethLogo} className="w-6 h-6" alt={"ETH"} />
+						ETH
+					</SelectItem>
 				</SelectContent>
 			</Select>
 		</div>

@@ -1,6 +1,7 @@
 export type Token = "bitcoin" | "ethereum";
-export type WalletState = {
-	token: Token;
-	address: string;
-	balance: number;
+export type BitcoinBalance = {
+	balance: string;
+};
+export type EtherBalance = {
+	result: string;
 };
