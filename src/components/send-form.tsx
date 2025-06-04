@@ -21,7 +21,10 @@ import {
 } from "@/components/ui/select";
 import bitcoinLogo from "@/assets/btc.png";
 import ethereumLogo from "@/assets/eth.png";
-import type { Transaction } from "@/lib/types";
+import type { TransactionPreview } from "@/lib/types";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { Loader2 } from "lucide-react";
 
 const sendSchema = z
 	.object({
@@ -48,8 +51,10 @@ const sendSchema = z
 type SendFormValues = z.infer<typeof sendSchema>;
 
 export default function BalanceForm({
-	setTransaction,
-}: { setTransaction: Dispatch<SetStateAction<Transaction | null>> }) {
+	setTransactionPreview,
+}: {
+	setTransactionPreview: Dispatch<SetStateAction<TransactionPreview | null>>;
+}) {
 	const form = useForm<SendFormValues>({
 		resolver: zodResolver(sendSchema),
 		defaultValues: {
@@ -58,13 +63,18 @@ export default function BalanceForm({
 			amount: "0",
 		},
 	});
+	const { mutate, isPending } = useMutation({
+		mutationFn: sendTransaction,
+		onError(error) {
+			toast.error(error.message);
+		},
+		onSuccess(data) {
+			setTransactionPreview(data);
+		},
+	});
 
-	const onSubmit = () => {
-		setTransaction({
-			estimatedFee: "0.0001BTC",
-			status: "preview",
-			totalAmount: "0.5001BTC",
-		});
+	const onSubmit = (data: z.infer<typeof sendSchema>) => {
+		mutate(data);
 	};
 
 	return (
@@ -146,8 +156,29 @@ export default function BalanceForm({
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Send Token</Button>
+				<Button type="submit">
+					Send Token
+					{isPending && <Loader2 className="animate-spin" />}
+				</Button>
 			</form>
 		</Form>
 	);
+}
+
+async function sendTransaction(transaction: z.infer<typeof sendSchema>) {
+	const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+	const response = await fetch(`${API_BASE_URL}/api/transaction/preview`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(transaction),
+	});
+
+	if (!response.ok) {
+		console.error(response.json());
+		throw new Error("A network error occurred, please try again later");
+	}
+
+	return response.json();
 }
