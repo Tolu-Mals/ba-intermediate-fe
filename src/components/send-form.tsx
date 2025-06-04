@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,7 +48,7 @@ export default function BalanceForm() {
 	});
 
 	const onSubmit = (data: SendFormValues) => {
-		console.log("Address: ", data.address)
+		setTransaction({ estimatedFee: "0.0001BTC", status: 'preview', totalAmount: "0.5001BTC" })
 	};
 
 	return (
