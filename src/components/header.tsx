@@ -8,8 +8,6 @@ import {
 } from "@/components/ui/select";
 import type { Token } from "@/lib/types";
 import type { SetStateAction } from "react";
-import btcLogo from "@/assets/btc.png";
-import ethLogo from "@/assets/eth.png";
 
 export default function Header({
 	token,
@@ -32,14 +30,8 @@ export default function Header({
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>
-					<SelectItem value="bitcoin">
-						<img src={btcLogo} className="w-6 h-6" alt={"BTC"} />
-						BTC
-					</SelectItem>
-					<SelectItem value="ethereum">
-						<img src={ethLogo} className="w-6 h-6" alt={"ETH"} />
-						ETH
-					</SelectItem>
+					<SelectItem value="bitcoin">Bitcoin</SelectItem>
+					<SelectItem value="ethereum">Ethereum</SelectItem>
 				</SelectContent>
 			</Select>
 		</div>

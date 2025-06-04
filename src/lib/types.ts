@@ -5,3 +5,8 @@ export type BitcoinBalance = {
 export type EtherBalance = {
 	result: string;
 };
+export type EtherscanResponse = {
+	message: string;
+	result: string;
+	status: string;
+};
